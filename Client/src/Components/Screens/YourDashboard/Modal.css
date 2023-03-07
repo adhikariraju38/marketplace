@@ -1,0 +1,56 @@
+.modal {
+  animation-name: modalopen;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-in-out;
+  }
+  
+  @keyframes modalopen {
+    from {
+      opacity: 0;
+      transform: translate(-50%, 100%);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }
+  .App {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  .modal {
+    background-color: #c0e6ba;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 5px;
+    padding: 20px;
+    z-index: 9999;
+    width: 800px;
+    max-width: 100%;
+
+  }
+  
+   .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  
+  .close-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+  }
+  
+  .close-icon i {
+    font-size: 30px;
+    color: #fff;
+  }
