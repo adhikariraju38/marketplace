@@ -15,7 +15,7 @@ function Chatbox() {
     if (!isOpen && !isGreetingSent) {
       const today = new Date();
       const autoReplyMessage = {
-        text: "Place your order for tomorrow?",
+        text: "Hi, How can i help you?",
         time: `${addZero(today.getHours())}:${addZero(today.getMinutes())}`,
         sent: false,
       };
@@ -29,25 +29,16 @@ function Chatbox() {
   if (text.trim().length > 0) {
     const today = new Date();
     let newMessage = null;
-    // if (!isOrderPlaced) {
-    //   // if this is not the first message and order is not placed, ask for order for tomorrow
-    //   newMessage = {
-    //     text: "Please place your order for tomorrow",
-    //     time: `${addZero(today.getHours())}:${addZero(today.getMinutes())}`,
-    //     sent: false,
-    //   };
-    //   setIsOrderPlaced(true);
-    // }
     if (isGreetingSent) {
       // if this is not the first message and order is placed, process the order
       newMessage = {
-        text: `Order: ${text.trim().replace(/\n/g, "<br>\n")}`,
+        text: `${text.trim().replace(/\n/g, "<br>\n")}`,
         time: `${addZero(today.getHours())}:${addZero(today.getMinutes())}`,
         sent: true,
       };
       
       const thankYouMessage = {
-        text: "Thank you for your order!",
+        text: "We will Conact You Soon!",
         time: `${addZero(today.getHours())}:${addZero(today.getMinutes())}`,
         sent: false,
       };
@@ -56,21 +47,6 @@ function Chatbox() {
       }, 1000);
     }
     setMessages((prevMessages) => [...prevMessages, newMessage]);
-    const token =
-    localStorage.getItem("consumertoken");
-    const formData = new FormData();
-    formData.append("order_message",text);
-    // setLoading(true);
-    const response1 = await fetch(`http://127.0.0.1:8000/product/order/`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    });
-    const json1 = await response1.json();
-    // setLoading(false);
-    console.log(json1)
     setText("");   
   }
 }

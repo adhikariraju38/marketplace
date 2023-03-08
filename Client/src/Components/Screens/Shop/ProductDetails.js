@@ -33,7 +33,7 @@ const handleRatingChange = (newRating) => {
     formData.append("rating", rating.rating);
     formData.append("body", comment.body);
     setLoading(true);
-    const token = localStorage.getItem("farmertoken") || localStorage.getItem("normaltoken");
+    const token = localStorage.getItem("consumertoken") || localStorage.getItem("normaltoken");
     const response1 = await fetch(`http://127.0.0.1:8000/product/addcomment/`, {
       method: "POST",
       headers: {
@@ -137,7 +137,7 @@ const handleRatingChange = (newRating) => {
     formData.append("product_id", id);
     formData.append("quantity", quantity);
     setLoading(true);
-    const token = localStorage.getItem("farmertoken") || localStorage.getItem("normaltoken")
+    const token = localStorage.getItem("consumertoken") || localStorage.getItem("normaltoken")
     const response = await fetch(`http://localhost:8000/product/cart/add/`, {
       method: "POST",
       headers: {

@@ -53,6 +53,29 @@ const FarmerList = () => {
     });
     return filteredDetails[0].profile_image;
   }
+
+  const groupedOrders = order.reduce((acc, order) => {
+    const { ordered_by, order_item, order_quantity } = order;
+    const group = acc.find((g) => g.ordered_by === ordered_by);
+    if (!group) {
+      acc.push({
+        ordered_by,
+        items: [{ item: order_item, quantity: order_quantity }]
+      });
+    } else {
+      group.items.push({ item: order_item, quantity: order_quantity });
+    }
+    return acc;
+  }, []);
+  
+  const concatenatedOrders = groupedOrders.map((group) => {
+    const items = group.items.map((item) => `${item.item}(${item.quantity}kg)`).join(", ");
+    return {
+      ordered_by: group.ordered_by,
+      items
+    };
+  });
+  
   return (
     <>
       <Sidebar />
@@ -94,16 +117,16 @@ const FarmerList = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {ReverseArray.map((row) => (    
-                      <tr key={row.id}>
-                        <td style={{marginRight:"9em"}}>
+                  {concatenatedOrders.map((row,index) => (    
+                      <tr key={index}>
+                        <td style={{marginRight:"9rem"}}>
                         <img
                           src={imageurl(getDetailsByCreatedBy(row.ordered_by))}
                           alt={row.ordered_by}
                         />
                           <p>{row.ordered_by}</p>
                         </td>
-                        <td>{row.order_message}</td>
+                        <td><p><b>Name of Items: </b></p>{row.items}</td>
                       </tr>  
                   ))}
                 </tbody>

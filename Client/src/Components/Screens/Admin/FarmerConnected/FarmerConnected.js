@@ -7,6 +7,7 @@ import Modal from "react-modal";
 import raju from "../../../images/raju.jpg";
 import AddTransactionForm from "./AddTransactionForm";
 import TransactionHistory from "./TransactionHistory";
+import AddFarmerForm from "./AddFarmerForm";
 
 Modal.setAppElement("#root");
 const FarmerConnected = () => {
@@ -49,6 +50,7 @@ const FarmerConnected = () => {
   };
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen1, setIsOpen1] = useState(false);
+  const [isOpen2, setIsOpen2] = useState(false);
   // eslint-disable-next-line
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
   const openModal = (event, id) => {
@@ -77,6 +79,18 @@ const FarmerConnected = () => {
   };
   const closeModal1 = () => {
     setIsOpen1(false);
+  };
+  const openModal2 = (event) => {
+    const target = event.target.getBoundingClientRect();
+    const modalWidth = 400;
+    const modalHeight = 300;
+    const leftPosition = target.left + target.width / 2 - modalWidth / 2;
+    const topPosition = target.top + window.scrollY - modalHeight - 10;
+    setModalPosition({ top: topPosition, left: leftPosition });
+    setIsOpen2(true);
+  };
+  const closeModal2 = () => {
+    setIsOpen2(false);
   };
 
   return (
@@ -111,6 +125,43 @@ const FarmerConnected = () => {
             <div className="order">
               <div className="head">
                 <h3>Farmers</h3>
+                <button
+                          onClick={(event) => openModal2(event)}
+                          type="submit"
+                          style={{
+                            height: "30px",
+                            width: "70px",
+                            fontSize: "10px",
+                          }}
+                          className="btn solid"
+                        >
+                          Add New Farmer
+                        </button>
+                        <div className="App">
+                          <Modal
+                            isOpen={isOpen2}
+                            onRequestClose={closeModal2}
+                            className="modal center"
+                            overlayClassName="overlay"
+                          >
+                            <div className="close-icon" onClick={closeModal2}>
+                              <button
+                                style={{
+                                  backgroundColor: "#4ca771",
+                                  fontSize: "15px",
+                                  height: "16px",
+                                  width: "15px",
+                                  color: "white",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                X
+                              </button>
+                            </div>
+                            <AddFarmerForm
+                            />
+                          </Modal>
+                        </div>
                 <i className="bx bx-filter"></i>
               </div>
               <table>

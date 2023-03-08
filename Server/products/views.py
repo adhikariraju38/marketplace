@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from api.permissions import IsAdminUser
 from .models import Product,Comment1,Cart1
-from .serializers import ProductSerializer,CommentSerializer,ProductUpdateSerializer,CartSerializer
+from .serializers import ProductSerializer,CommentSerializer,ProductUpdateSerializer,CartSerializer,ProductQuantityUpdateSerializer
 from rest_framework import generics, status
 
 class AddProductView(APIView):
@@ -91,7 +91,7 @@ class ProductDeleteView(generics.DestroyAPIView):
 
 
 class ProductUpdateView(generics.UpdateAPIView):
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [ IsAdminUser]
     queryset = Product.objects.all()
     serializer_class = ProductUpdateSerializer
 
@@ -108,6 +108,22 @@ class ProductUpdateView(generics.UpdateAPIView):
             return Response({'message': 'Product Updated successfully.'}, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ProductQuantityUpdateView(generics.UpdateAPIView):
+    # permission_classes = [IsAdminUser]
+    queryset = Product.objects.all()
+    serializer_class = ProductQuantityUpdateSerializer
+
+    def patch(self, request, *args, **kwargs):
+        product = self.get_object()
+
+        serializer = self.serializer_class(product, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': 'Product quantity updated successfully.'}, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
         
 #Cart
@@ -159,7 +175,7 @@ class CartDeleteView(generics.DestroyAPIView):
         cart_item.delete()
         return Response({'message': 'Item deleted successfully from the cart.'}, status=status.HTTP_200_OK)
     
-from .models import Order1
+from .models import Order
 from .forms import OrderForm
     
 class CreateOrderView(APIView):
@@ -178,21 +194,46 @@ from django.shortcuts import get_object_or_404
 
 class OrderDeleteView(APIView):
     def delete(self, request, order_id):
-        order = get_object_or_404(Order1, id=order_id)
+        order = get_object_or_404(Order, id=order_id)
         order.delete()
         return JsonResponse({'success': True}, status=200)
 
 from django.db.models import Max
 from django.http import JsonResponse
-from .models import Order1
+from .models import Order
 
+
+# class RecentOrdersView(APIView):
+#     def get(self, request):
+#         # get the latest order id for each created_by value
+#         subquery = Order.objects.values('ordered_by').annotate(latest_order_id=Max('id'))
+#         # filter the orders by the latest order id for each created_by value
+#         orders = Order.objects.filter(id__in=subquery.values('latest_order_id'))
+
+#         # serialize the orders
+#         serialized_orders = []
+#         for order in orders:
+#             serialized_order = {
+#                 'id': order.id,
+#                 'ordered_by': order.ordered_by,
+#                 'order_item': order.order_item,
+#                 'created_at': order.created_at,
+#                 'order_quantity':order.order_quantity,
+#             }
+#             serialized_orders.append(serialized_order)
+
+#         return JsonResponse(serialized_orders,safe=False)
+
+from django.utils import timezone
+from datetime import timedelta
 
 class RecentOrdersView(APIView):
     def get(self, request):
-        # get the latest order id for each created_by value
-        subquery = Order1.objects.values('ordered_by').annotate(latest_order_id=Max('id'))
-        # filter the orders by the latest order id for each created_by value
-        orders = Order1.objects.filter(id__in=subquery.values('latest_order_id'))
+        # calculate the datetime for 24 hours ago
+        yesterday = timezone.now() - timedelta(hours=24)
+
+        # filter the orders by the created_at timestamp within the last 24 hours
+        orders = Order.objects.filter(created_at__gte=yesterday)
 
         # serialize the orders
         serialized_orders = []
@@ -200,9 +241,12 @@ class RecentOrdersView(APIView):
             serialized_order = {
                 'id': order.id,
                 'ordered_by': order.ordered_by,
-                'order_message': order.order_message,
+                'order_item': order.order_item,
                 'created_at': order.created_at,
+                'order_quantity':order.order_quantity,
             }
             serialized_orders.append(serialized_order)
 
-        return JsonResponse(serialized_orders,safe=False)
+        return JsonResponse(serialized_orders, safe=False)
+
+

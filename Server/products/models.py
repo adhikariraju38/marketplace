@@ -11,10 +11,11 @@ class Comment1(models.Model):
     class Meta:
         ordering = ['created_on']
 
-class Order1(models.Model):
-    order_message = models.CharField(max_length=1000)
+class Order(models.Model):
+    order_item = models.CharField(max_length=1000)
     ordered_by = models.CharField(max_length=255, default="")
     created_at = models.DateTimeField(auto_now_add=True)
+    order_quantity=models.CharField(max_length=255)
 
     def __str__(self):
         return self.order_message

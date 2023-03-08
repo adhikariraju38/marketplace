@@ -19,6 +19,26 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', "category",'image',"quantity","description","price","store" ]
         read_only_fields = ['id']
 
+class ProductQuantityUpdateSerializer(serializers.ModelSerializer):
+    quantity = serializers.IntegerField()
+
+    class Meta:
+        model = Product
+        fields = ('quantity',)
+        read_only_fields = ('quantity',)
+
+    def validate_quantity(self, value):
+        current_quantity = self.instance.quantity
+        new_quantity = current_quantity + value
+        if new_quantity < 0:
+            raise serializers.ValidationError('Quantity cannot be negative.')
+        return new_quantity
+
+    def update(self, instance, validated_data):
+        instance.quantity = validated_data['quantity']
+        instance.save()
+        return instance
+
 from rest_framework import serializers
 from .models import Cart1
 

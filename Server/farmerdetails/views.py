@@ -16,7 +16,7 @@ class CreateFarmerView(View):
         form = FarmerForm(request.POST, request.FILES)
         if form.is_valid():
             farmer = form.save()
-            return JsonResponse({'id': farmer.id}, status=201)
+            return JsonResponse({'success':True}, status=201)
         return JsonResponse({'errors': form.errors}, status=400)
 
 class FarmerDeleteView(View):
