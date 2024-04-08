@@ -30,29 +30,42 @@ git clone https://github.com/adhikariraju38/marketplace.
 
 
 2. Navigate to the `client` directory and install dependencies:
+```bash
 cd client
 npm install
+```
 
 
 3. Navigate to the `server` directory and install Django dependencies:
+```bash
 cd ../server
 pip install -r requirements.txt
+```
 
 
 
 ### Running the Application
 
 1. Start the Django server:
+```bash
 python manage.py runserver
+```
 
 
 2. In a separate terminal, start the React development server:
+```bash
 cd ../client
 npm start
+```
 
 
 3. Open your web browser and go to `http://localhost:3000` to access the Agricultural Marketplace application.
 
-## Contributing
+## Contributions
+
+- Raju Kumar Yadav ([GitHub](https://github.com/https://github.com/adhikariraju38))
+- Sumit Yadav ([GitHub](https://github.com/rockerritesh))
+
+---
 
 Contributions to the Agricultural Marketplace project are welcome! If you have any suggestions, bug reports, or feature requests, please open an issue or submit a pull request.
